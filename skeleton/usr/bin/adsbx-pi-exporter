@@ -1,0 +1,67 @@
+#!/bin/bash
+
+set -eu
+VCGEN=/opt/vc/bin/vcgencmd
+TEXTFILE=/run/raspberry-metrics.prom
+TEMPFILE=$TEXTFILE.$$
+TEMP=$(awk '{printf "%.2f", $1/1000}' /sys/class/thermal/thermal_zone0/temp)
+
+#Flag Bits
+UNDERVOLTED=0x1
+CAPPED=0x2
+THROTTLED=0x4
+SOFT_TEMPLIMIT=0x8
+HAS_UNDERVOLTED=0x10000
+HAS_CAPPED=0x20000
+HAS_THROTTLED=0x40000
+HAS_SOFT_TEMPLIMIT=0x80000
+
+BAD="1"
+GOOD="0"
+
+while true
+ do
+  if [ -z "$TEMP" ]; then
+ 	echo "$NOW - Error: Value variable empty"
+  else
+ 	echo "CPU_Temperature ${TEMP}" > $TEMPFILE
+  	for id in arm core h264 isp v3d uart pwm emmc pixel vec hdmi dpi; do
+ 		echo "Freq_$id $($VCGEN measure_clock $id | awk '{split($0,a,"="); print a[2]}')" >> $TEMPFILE
+ 	done
+
+  	for id in core sdram_c sdram_i sdram_p; do
+ 		echo "Volt_$id $($VCGEN measure_volts $id | awk '{split($0,a,"="); print a[2]}' | sed 's/V$//')" >> $TEMPFILE
+ 	done
+
+  	for id in arm gpu; do
+ 		echo "Mem_$id $($VCGEN get_mem $id | awk '{split($0,a,"="); print a[2]}' | sed 's/M$//')" >> $TEMPFILE
+ 	done
+
+  	mv $TEMPFILE $TEXTFILE
+    fi
+    #Get Status, extract hex
+	STATUS=$(vcgencmd get_throttled)
+	STATUS=${STATUS#*=}
+
+	echo -n "throttle_undervolted_now "  >> $TEMPFILE
+	((($STATUS&UNDERVOLTED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+	echo -n "throttle_undervolted_run "  >> $TEMPFILE
+	((($STATUS&HAS_UNDERVOLTED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+
+	echo -n "throttled_now "  >> $TEMPFILE
+	((($STATUS&THROTTLED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+	echo -n "throttled_run "  >> $TEMPFILE
+	((($STATUS&HAS_THROTTLED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+
+	echo -n "frequency_capped_now "  >> $TEMPFILE
+	((($STATUS&CAPPED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+	echo -n "frequency_capped_run "  >> $TEMPFILE
+	((($STATUS&HAS_CAPPED)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+
+	echo -n "throttled_softlimit_now "  >> $TEMPFILE
+	((($STATUS&SOFT_TEMPLIMIT)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+	echo -n "throttled_softlimit_run "  >> $TEMPFILE
+ 	((($STATUS&HAS_SOFT_TEMPLIMIT)!=0)) && echo "${BAD}" || echo "${GOOD}"  >> $TEMPFILE
+
+    sleep 30
+ done

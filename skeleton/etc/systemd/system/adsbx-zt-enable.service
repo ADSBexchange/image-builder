@@ -1,0 +1,12 @@
+[Unit]
+Wants=network.target
+After=network.target
+
+[Service]
+SyslogIdentifier=adsbx-zt-enable
+User=root
+ExecStart=/usr/bin/adsbx-zt-enable
+Type=oneshot
+
+[Install]
+WantedBy=default.target

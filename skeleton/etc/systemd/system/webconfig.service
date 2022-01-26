@@ -1,0 +1,15 @@
+[Unit]
+Description=Scan Wifi for known SSIDs
+After=network.target
+
+[Service]
+EnvironmentFile=/boot/adsb-config.txt
+EnvironmentFile=/boot/adsbx-env
+Type=idle
+User=pi
+ExecStart=/bin/bash /home/pi/adsbexchange/webconfig/webconfig.sh
+Restart=no
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

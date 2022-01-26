@@ -1,0 +1,8 @@
+#!/bin/bash
+G=$(echo $1 | tr -cd '[:digit:].-')
+
+if [[ $G == "" ]]; then echo "Error, invalid gain!"; exit 1; fi
+
+sudo sed -i -E '/GAIN/s/^GAIN=.*/GAIN='${G}'/gI' /boot/adsb-config.txt
+sudo systemctl restart readsb
+

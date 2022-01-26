@@ -1,0 +1,19 @@
+
+[Unit]
+Wants=network.target
+After=network.target
+After=adsbexchange-978.service
+
+[Service]
+EnvironmentFile=/boot/adsbx-978env
+SyslogIdentifier=adsbexchange-978-convert
+User=pi
+ExecStart=bash /usr/local/share/adsbexchange-978/convert.sh
+Type=simple
+Restart=always
+RestartSec=30
+StartLimitInterval=1
+StartLimitBurst=100
+
+[Install]
+WantedBy=default.target

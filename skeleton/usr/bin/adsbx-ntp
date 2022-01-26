@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/etc/init.d/ntp stop > /dev/null
+ntpd -q -g > /dev/null
+/etc/init.d/ntp start > /dev/null
