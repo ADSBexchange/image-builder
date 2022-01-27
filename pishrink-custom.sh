@@ -368,7 +368,7 @@ if ! minsize=$(resize2fs -P "$loopback"); then
 	exit 10
 fi
 minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')
-EXTRA=2048
+EXTRA=17
 logVariables $LINENO currentsize minsize
 if (( $currentsize <= $minsize + EXTRA )); then
   echo "Image already shrunk to smallest size, job finished"

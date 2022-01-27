@@ -27,10 +27,6 @@ systemctl enable \
     ssh \
 
 
-ln -sf etc/default/dump978-fa /boot/adsbx-978env
-ln -sf etc/default/readsb /boot/adsbx-env
-ln -sf etc/default/adsbexchange /boot/adsb-config.txt
-
 wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.1_all.deb
 dpkg -i piaware-repo.deb
 
@@ -59,5 +55,10 @@ bash update-adsbx.sh
 apt remove -y $temp_packages
 apt autoremove -y
 apt clean
+
+# config symlinks
+ln -sf /etc/default/dump978-fa /boot/adsbx-978env
+ln -sf /etc/default/readsb /boot/adsbx-env
+ln -sf /etc/default/adsbexchange /boot/adsb-config.txt
 
 cd /utemp

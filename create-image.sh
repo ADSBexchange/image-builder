@@ -8,7 +8,7 @@ image="$2"
 
 rm -f "${image}"
 cp -f "$1" "${image}"
-./growimage.sh "${image}" 2G
+./growimage.sh "${image}" 3G
 
 ./mount.sh "${image}"
 
@@ -18,6 +18,9 @@ mkdir -p ./root/image-setup/
 init=/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
+
+# make sure the skeleton is present after initial installation
+find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
 
 rm -rf root/utemp
 
@@ -42,9 +45,20 @@ rm -rf root/usr/share/graphs1090/git/
 dd if=/dev/zero of=root/zeros bs=1M status=progress || true
 rm -rf root/zeros
 
+# modify rpi image autoexpand
+cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
+sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' root/boot/cmdline.txt
+sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
+sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
+sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\
+MAX_TARGET_END=$((8000 * 1024 * 1024 / 512))\
+if [ "$TARGET_END" -gt "$MAX_TARGET_END" ]; then TARGET_END=$MAX_TARGET_END; fi\
+#g' root/usr/local/bin/limited_expand.sh
+
 ./umount.sh
 
-./pishrink-custom.sh "${image}"
+# skip auto expansion, we use the autoexpand the rpi image comes with and modify it
+./pishrink-custom.sh -sv "${image}"
 
 echo --------------------------------------------
 echo --------------------------------------------
