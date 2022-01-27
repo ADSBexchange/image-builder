@@ -1,0 +1,10 @@
+RECEIVER_978_OPTIONS="--net-only"
+DECODER_978_OPTIONS="--max-range 460"
+NET_978_OPTIONS="--net --net-heartbeat 60 --net-ro-interval 0.5 --net-ro-port 0 --net-sbs-port 0 --net-bi-port 0 --net-bo-port 0 --net-connector localhost,30004,beast_out"
+AVR_978_IN_PORT=37981
+JSON_978_OPTIONS="--json-location-accuracy 2"
+
+ENABLED=yes
+RECEIVER_OPTIONS="--sdr-gain 36.4 --sdr driver=rtlsdr,serial=978 --format CS8"
+DECODER_OPTIONS=""
+NET_OPTIONS="--raw-port 30978 --json-port 30979"

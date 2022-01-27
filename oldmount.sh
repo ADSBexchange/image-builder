@@ -16,5 +16,5 @@ losetup -d $loop
 
 losetup $loop -P $image
 
-mount $p1 oldboot
 mount $p2 oldroot
+mount $p1 oldroot/boot

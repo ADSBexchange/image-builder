@@ -1,0 +1,25 @@
+
+	          ^                                                                    
+	         / \                                                                   
+	        //V\\                                                                  
+	       / \|/ \                                                                 
+	      /// v \\\                                                                
+	     /         \                                                               
+	    /   ADSBx   \                                                              
+	   /    Buster   \                                                             
+	  /   /|     |\   \                                                            
+	 /   / \     / \   \                                                           
+	 \  /   X   X   \  /                                                           
+	  \/   / \ / \   \/                                                        
+	      /   V   \                                                                
+	     |         |        
+
+
+WiFi:  place wpa_supplicant.conf in /boot
+
+Config: adsb-config.txt located in /boot
+
+ALL CHANGES REQUIRE REBOOT
+
+
+

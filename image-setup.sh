@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
+
 rm -rf /utemp
 mkdir -p /utemp
 cd /utemp
@@ -48,17 +51,23 @@ apt install --no-install-recommends --no-install-suggests -y $packages $temp_pac
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
 
-git clone https://github.com/ADSBexchange/adsbx-update.git
+git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git
 cd adsbx-update
 bash update-adsbx.sh
+cd /utemp
+
+git clone --depth 1 https://github.com/dstreufert/adsbx-webconfig.git
+cd adsbx-webconfig
+bash install.sh
+
+bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
+
 
 apt remove -y $temp_packages
 apt autoremove -y
 apt clean
 
 # config symlinks
-ln -sf /etc/default/dump978-fa /boot/adsbx-978env
-ln -sf /etc/default/readsb /boot/adsbx-env
-ln -sf /etc/default/adsbexchange /boot/adsb-config.txt
-
-cd /utemp
+ln -sf /boot/adsbx-978env /etc/default/dump978-fa
+ln -sf /boot/adsbx-env /etc/default/readsb
+ln -sf /boot/adsb-config.txt /etc/default/adsbexchange
