@@ -56,10 +56,11 @@ env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
 
 rm -rf root/utemp
 
-rm -f root/boot/adsbx-uuid
-rm -rf root/boot/wpa_supplicant.conf
+# don't delete these file, we need wpa conf from webconfig which has already set this file
+#rm -rf root/boot/wpa_supplicant.conf
+#rm -rf root/etc/wpa_supplicant/wpa_supplicant.conf
 
-rm -rf root/etc/wpa_supplicant/wpa_supplicant.conf
+rm -f root/boot/adsbx-uuid
 rm -rf root/var/lib/zerotier-one/identity.*
 rm -rf root/var/lib/zerotier-one/authtoken.secret
 rm -rf root/var/lib/collectd/rrd/*
