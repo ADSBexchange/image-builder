@@ -48,6 +48,7 @@ apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses5-dev zlib1g-dev python3-dev python3-venv"
 packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime"
+packages+=" dnsutils jq" # for adsbexchange-stats, avoid invoking apt install gain
 
 apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
 
@@ -69,7 +70,7 @@ apt clean
 # delete var cache
 rm -rf /var/cache/*
 # Regenerate man database.
-/usr/bin/mandb --quiet
+/usr/bin/mandb
 
 # config symlinks
 ln -sf /boot/adsbx-978env /etc/default/dump978-fa
