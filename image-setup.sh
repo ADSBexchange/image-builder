@@ -19,9 +19,9 @@ systemctl mask dump1090-fa
 systemctl mask dump1090
 systemctl mask dump1090-mutability
 systemctl disable dphys-swapfile.service
-systemctl disable --now apt-daily.timer
-systemctl disable --now apt-daily-upgrade.timer
-systemctl disable --now man-db.timer
+systemctl disable apt-daily.timer
+systemctl disable apt-daily-upgrade.timer
+systemctl disable man-db.timer
 
 # enable services
 systemctl enable \

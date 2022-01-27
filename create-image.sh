@@ -34,7 +34,7 @@ EOF
 
 mv root/etc/cron.hourly/fake-hwclock root/etc/cron.weekly/fake-hwclock
 
-cat > /etc/cron.d/weekly_reboot
+cat > /etc/cron.d/weekly_reboot <<EOF
 # reboot every Monday at 02:42 in the morning
 42 2 * * 1 root /usr/sbin/reboot
 EOF
