@@ -31,6 +31,16 @@ tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
 tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
 tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
 EOF
+cat >> root/etc/hosts <<EOF
+127.0.0.1	localhost adsbexchange adsbx
+::1		localhost ip6-localhost ip6-loopback
+ff02::1		ip6-allnodes
+ff02::2		ip6-allrouters
+
+127.0.1.1	raspberrypi
+EOF
+echo adsbexchange > root/etc/hostname
+
 
 mv root/etc/cron.hourly/fake-hwclock root/etc/cron.weekly/fake-hwclock
 

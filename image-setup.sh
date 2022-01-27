@@ -68,9 +68,9 @@ apt autoremove -y
 apt clean
 
 # delete var cache
-rm -rf /var/cache/*
+#rm -rf /var/cache/*
 # Regenerate man database.
-/usr/bin/mandb
+#/usr/bin/mandb
 
 # config symlinks
 ln -sf /boot/adsbx-978env /etc/default/dump978-fa
