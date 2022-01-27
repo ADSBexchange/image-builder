@@ -26,9 +26,13 @@ find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs 
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
 
 cat >> root/etc/fstab <<EOF
-tmpfs /tmp tmpfs defaults,noatime,nosuid	0	0
+tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
+tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
+tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
 tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
 EOF
+
+mv root/etc/cron.hourly/fake-hwclock root/etc/cron.weekly/fake-hwclock
 
 cat > /etc/cron.d/weekly_reboot
 # reboot every Monday at 02:42 in the morning
