@@ -9,21 +9,29 @@ if [[ -z $1 ]] || [[ -z $2 ]]; then
 fi
 image="$2"
 
-rm -f "${image}"
-cp -f "$1" "${image}"
-./growimage.sh "${image}" 2500M
+if true; then
+    rm -f "${image}"
+    cp -f "$1" "${image}"
+    ./growimage.sh "${image}" 2500M
+    ./mount.sh "${image}"
+fi
 
-./mount.sh "${image}"
 
 rm -rf root/adsbexchange
 mkdir -p root/adsbexchange
 git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git root/adsbexchange/update
 rm -rf root/adsbexchange/update/.git
 
-find skeleton/* -type d | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T -n -v skeleton/'{}' root/'{}'
+find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
 
-init=/image-setup/image-setup.sh
+cat >> root/etc/fstab <<EOF
+tmpfs /tmp tmpfs defaults,noatime,nosuid	0	0
+tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
+EOF
+
+mkdir -p root/adsbexchange/image-setup
+init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
 
