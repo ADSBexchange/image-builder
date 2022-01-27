@@ -40,7 +40,7 @@ bash install-zerotier.sh
 systemctl disable zerotier-one
 
 apt update
-apt remove -y g++ libraspberrypi-doc gdb
+apt remove -y g++ libraspberrypi-doc gdb rsyslog
 apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses5-dev zlib1g-dev python3-dev python3-venv"
@@ -51,10 +51,7 @@ apt install --no-install-recommends --no-install-suggests -y $packages $temp_pac
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
 
-git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git
-cd adsbx-update
-bash update-adsbx.sh
-cd /utemp
+bash /adsbexchange/update/update-adsbx.sh
 
 git clone --depth 1 https://github.com/dstreufert/adsbx-webconfig.git
 cd adsbx-webconfig

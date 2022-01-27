@@ -15,17 +15,17 @@ cp -f "$1" "${image}"
 
 ./mount.sh "${image}"
 
-mkdir -p root/adsbexchange/.adsbx
-mkdir -p root/home/pi/adsbexchange/.adsbx
+rm -rf root/adsbexchange
+mkdir -p root/adsbexchange
+git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git root/adsbexchange/update
+rm -rf root/adsbexchange/update/.git
+
+find skeleton/* -type d | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T -n -v skeleton/'{}' root/'{}'
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
 
-mkdir -p ./root/image-setup/
 init=/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
-
-# make sure the skeleton is present after initial installation
-find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
 
 rm -rf root/utemp
 
