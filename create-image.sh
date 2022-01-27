@@ -30,6 +30,11 @@ tmpfs /tmp tmpfs defaults,noatime,nosuid	0	0
 tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
 EOF
 
+cat > /etc/cron.d/weekly_reboot
+# reboot every Monday at 02:42 in the morning
+42 2 * * 1 root /usr/sbin/reboot
+EOF
+
 mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
