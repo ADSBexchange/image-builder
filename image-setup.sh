@@ -19,6 +19,9 @@ systemctl mask dump1090-fa
 systemctl mask dump1090
 systemctl mask dump1090-mutability
 systemctl disable dphys-swapfile.service
+systemctl disable --now apt-daily.timer
+systemctl disable --now apt-daily-upgrade.timer
+systemctl disable --now man-db.timer
 
 # enable services
 systemctl enable \
@@ -59,10 +62,14 @@ bash install.sh
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
 
-
 apt remove -y $temp_packages
 apt autoremove -y
 apt clean
+
+# delete var cache
+rm -rf /var/cache/*
+# Regenerate man database.
+/usr/bin/mandb --quiet
 
 # config symlinks
 ln -sf /boot/adsbx-978env /etc/default/dump978-fa
