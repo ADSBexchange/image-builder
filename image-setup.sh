@@ -44,7 +44,7 @@ apt remove -y g++ libraspberrypi-doc gdb rsyslog
 apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses5-dev zlib1g-dev python3-dev python3-venv"
-packages="librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime"
+packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime"
 
 apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
 
