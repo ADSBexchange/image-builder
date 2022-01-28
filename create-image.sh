@@ -23,31 +23,7 @@ git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git root/adsbex
 rm -rf root/adsbexchange/update/.git
 
 find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
-find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -a -T --remove-destination -v skeleton/'{}' root/'{}'
-
-cat >> root/etc/fstab <<EOF
-tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
-tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
-tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
-tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
-EOF
-cat >> root/etc/hosts <<EOF
-127.0.0.1	localhost adsbexchange adsbx
-::1		localhost ip6-localhost ip6-loopback
-ff02::1		ip6-allnodes
-ff02::2		ip6-allrouters
-
-127.0.1.1	raspberrypi
-EOF
-echo adsbexchange > root/etc/hostname
-
-
-mv root/etc/cron.hourly/fake-hwclock root/etc/cron.weekly/fake-hwclock
-
-cat > /etc/cron.d/weekly_reboot <<EOF
-# reboot every Monday at 02:42 in the morning
-42 2 * * 1 root /usr/sbin/reboot
-EOF
+find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -T --remove-destination -v skeleton/'{}' root/'{}'
 
 mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh

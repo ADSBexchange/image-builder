@@ -23,6 +23,17 @@ systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
 systemctl disable man-db.timer
 
+if ! grep -qs -e '/tmp' /etc/fstab; then
+cat >> /etc/fstab <<EOF
+tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
+tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
+tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
+tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
+EOF
+fi
+
+echo adsbexchange > /etc/hostname
+
 # enable services
 systemctl enable \
     adsbexchange-first-run.service \
