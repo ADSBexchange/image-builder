@@ -35,6 +35,8 @@ fi
 
 echo adsbexchange > /etc/hostname
 
+mv /etc/cron.hourly/fake-hwclock /etc/cron.weekly
+
 # enable services
 systemctl enable \
     adsbexchange-first-run.service \
