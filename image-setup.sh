@@ -44,10 +44,16 @@ systemctl enable \
     readsb.service \
     adsbexchange-mlat.service \
     adsbexchange-feed.service \
-    ssh \
+    ssh
 
 
-wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.1_all.deb
+if grep -qs -e bullseye /etc/os-release; then
+    wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_7.1_all.deb
+elif grep -qs -e buster /etc/os-release; then
+    wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.1_all.deb
+else
+    wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.1_all.deb
+fi
 dpkg -i piaware-repo.deb
 
 curl https://install.zerotier.com  -o install-zerotier.sh
