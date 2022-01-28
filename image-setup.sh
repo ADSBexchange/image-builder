@@ -29,6 +29,7 @@ tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
 tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
 tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
 tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
+tmpfs /var/lib/systemd/timers tmpfs defaults,noatime,nosuid,size=50M	0	0
 EOF
 fi
 
