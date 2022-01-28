@@ -41,11 +41,13 @@ if [ -f "/boot/adsb-config.txt" ]; then
         services-handle disable "$SERVICES_978"
     fi
 
-    SERVICES_PROMG="prometheus prometheus-node-exporter prometheus-dump1090-exporter grafana-server"
-    if [[ -z ${PROMG} ]] || [[ ${PROMG} == "yes" ]]; then
-        services-handle enable "$SERVICES_PROMG"
-    else
-        services-handle disable "$SERVICES_PROMG"
+    if false; then
+        SERVICES_PROMG="prometheus prometheus-node-exporter prometheus-dump1090-exporter grafana-server"
+        if [[ -z ${PROMG} ]] || [[ ${PROMG} == "yes" ]]; then
+            services-handle enable "$SERVICES_PROMG"
+        else
+            services-handle disable "$SERVICES_PROMG"
+        fi
     fi
 
     if [[ -z ${AUTOGAIN} ]] || [[ ${AUTOGAIN} == "yes" ]]; then

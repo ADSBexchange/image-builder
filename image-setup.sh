@@ -76,6 +76,7 @@ cd adsbx-webconfig
 bash install.sh
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
+bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/autogain-install.sh)"
 
 apt remove -y $temp_packages
 apt autoremove -y
