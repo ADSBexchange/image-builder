@@ -51,8 +51,6 @@ rm -rf root/var/tmp/*
 rm -rf root/var/cache/apt
 rm -rf root/var/lib/apt/lists/*
 rm -rf root/usr/share/graphs1090/git/
-dd if=/dev/zero of=root/zeros bs=1M status=progress || true
-rm -rf root/zeros
 
 # modify rpi image autoexpand
 cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
@@ -68,6 +66,11 @@ if [ "$TARGET_END" -gt "$MAX_TARGET_END" ]; then TARGET_END=$MAX_TARGET_END; fi\
 
 # skip auto expansion, we use the autoexpand the rpi image comes with and modify it
 ./pishrink-custom.sh -sv "${image}"
+
+./mount.sh "${image}"
+dd if=/dev/zero of=root/zeros bs=1M status=progress || true
+rm -rf root/zeros
+./umount.sh "${image}"
 
 echo --------------------------------------------
 echo --------------------------------------------
