@@ -1,4 +1,15 @@
 #!/bin/bash
+
+test -f /etc/ssh/ssh_host_rsa_key || dpkg-reconfigure openssh-server
+
+function file_lt() {
+    ! [[ -f "$1" ]] || (( $(wc -c "$1" | cut -d' ' -f1) < $2 ))
+}
+if file_lt /etc/ssh/ssh_host_ed25519_key.pub 50 || file_lt /etc/ssh/ssh_host_ed25519_key 50; then
+    rm -f /etc/ssh/ssh_host_*
+    /usr/bin/ssh-keygen -A
+fi
+
 if [ -f "/boot/adsb-config.txt" ]; then
         . /boot/adsb-config.txt
 else
