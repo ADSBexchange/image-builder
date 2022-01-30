@@ -3,20 +3,13 @@
 Description=adsbexchange-mlat
 Wants=network.target
 After=network.target
+After=adsbexchange-first-run.service
 
 [Service]
 EnvironmentFile=/boot/adsb-config.txt
 EnvironmentFile=/boot/adsbx-env
 User=pi
-ExecStart=/usr/local/share/adsbexchange/venv/bin/mlat-client \
-	--input-type $INPUT_TYPE --no-udp \
-	--input-connect $INPUT \
-	--server $MLATSERVER \
-	--user $USER \
-	--lat $LATITUDE \
-	--lon $LONGITUDE \
-	--alt $ALTITUDE \
-	$RESULTS
+ExecStart=/usr/local/bin/mlat.sh
 Type=simple
 Restart=on-failure
 RestartSec=30

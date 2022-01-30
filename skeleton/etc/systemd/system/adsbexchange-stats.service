@@ -1,0 +1,23 @@
+[Unit]
+Description=ADSBexchange Stats
+After=adsbexchange-first-run.service
+After=readsb.service
+
+[Service]
+Type=simple
+SyslogIdentifier=adsbexchange-stats
+PermissionsStartOnly=true
+ExecStartPre=/usr/local/share/adsbexchange-stats/create-uuid.sh
+ExecStart=/usr/local/share/adsbexchange-stats/json-status
+RuntimeDirectory=adsbexchange-stats
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=30
+User=adsbexchange
+Nice=19
+IOSchedulingClass=idle
+
+
+[Install]
+WantedBy=multi-user.target
