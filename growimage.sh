@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
+
 if [[ -z $1 ]] || [[ -z $2 ]]; then
     echo insufficient arguments
     exit 1
