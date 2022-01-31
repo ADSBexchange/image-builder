@@ -34,7 +34,12 @@ fi
 
 echo adsbexchange > /etc/hostname
 
-mv /etc/cron.hourly/fake-hwclock /etc/cron.weekly
+mv /etc/cron.hourly/fake-hwclock /etc/cron.daily || true
+
+pushd /etc/cron.daily
+rm apt-compat bsdmainutils dpkg man-db
+popd
+
 
 # enable services
 systemctl enable \
@@ -94,7 +99,7 @@ apt clean
 # delete var cache
 #rm -rf /var/cache/*
 # Regenerate man database.
-#/usr/bin/mandb
+/usr/bin/mandb
 
 sed -i -e 's#^driftfile.*#driftfile /var/tmp/chrony.drift#' /etc/chrony/chrony.conf
 
