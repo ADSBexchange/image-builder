@@ -13,3 +13,9 @@ unzip 2021-12-02-raspios-buster-armhf-lite.zip
 ## Building the adsbexchange image base on bullseye
 
 Shoudl work similar as above, not yet tested
+
+## tracking down disk writes
+
+```
+stdbuf -oL -eL inotifywait -r -m /etc /adsbexchange /opt /root /home /usr /lib /boot /var 2>&1 | stdbuf -oL grep -v -e OPEN -e NOWRITE -e ACCESS -e /var/tmp -e /var/cache/fontconfig -e /var/lib/systemd/timers -e /var/log | ts >> /tmp/inot
+```
