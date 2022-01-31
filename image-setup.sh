@@ -82,6 +82,11 @@ cd adsbx-webconfig
 bash install.sh
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
+#make sure the symlinks are present for graphs1090 data collection:
+ln -snf /run/adsbexchange-978 /usr/share/graphs1090/978-symlink/data
+ln -snf /run/readsb /usr/share/graphs1090/data-symlink/data
+
+
 bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/autogain-install.sh)"
 
 apt remove -y $temp_packages
