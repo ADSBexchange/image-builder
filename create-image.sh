@@ -17,11 +17,6 @@ if true; then
 fi
 
 
-rm -rf root/adsbexchange
-mkdir -p root/adsbexchange
-git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git root/adsbexchange/update
-rm -rf root/adsbexchange/update/.git
-
 find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -T --remove-destination -v skeleton/'{}' root/'{}'
 
@@ -29,8 +24,6 @@ mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
-
-rm -rf root/utemp
 
 # don't delete these file, we need wpa conf from webconfig which has already set this file
 #rm -rf root/boot/wpa_supplicant.conf

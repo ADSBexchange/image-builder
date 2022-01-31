@@ -79,11 +79,17 @@ apt install --no-install-recommends --no-install-suggests -y $packages $temp_pac
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
 
+mkdir -p /adsbexchange/
+rm -rf /adsbexchange/update
+git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git /adsbexchange/update
+rm -rf /adsbexchange/update/.git
+
 bash /adsbexchange/update/update-adsbx.sh
 
 git clone --depth 1 https://github.com/dstreufert/adsbx-webconfig.git
-cd adsbx-webconfig
+pushd adsbx-webconfig
 bash install.sh
+popd
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
 #make sure the symlinks are present for graphs1090 data collection:
@@ -107,3 +113,6 @@ sed -i -e 's#^driftfile.*#driftfile /var/tmp/chrony.drift#' /etc/chrony/chrony.c
 ln -sf /boot/adsbx-978env /etc/default/dump978-fa
 ln -sf /boot/adsbx-env /etc/default/readsb
 ln -sf /boot/adsb-config.txt /etc/default/adsbexchange
+
+cd /
+rm -rf /utemp
