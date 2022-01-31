@@ -27,7 +27,6 @@ if ! grep -qs -e '/tmp' /etc/fstab; then
 cat >> /etc/fstab <<EOF
 tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
 tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
-tmpfs /var/lib/chrony tmpfs defaults,noatime,nosuid,size=50M	0	0
 tmpfs /var/log tmpfs defaults,noatime,nosuid,size=50M	0	0
 tmpfs /var/lib/systemd/timers tmpfs defaults,noatime,nosuid,size=50M	0	0
 EOF
@@ -86,7 +85,6 @@ bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/insta
 ln -snf /run/adsbexchange-978 /usr/share/graphs1090/978-symlink/data
 ln -snf /run/readsb /usr/share/graphs1090/data-symlink/data
 
-
 bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/autogain-install.sh)"
 
 apt remove -y $temp_packages
@@ -97,6 +95,8 @@ apt clean
 #rm -rf /var/cache/*
 # Regenerate man database.
 #/usr/bin/mandb
+
+sed -i -e 's#^driftfile.*#driftfile /var/tmp/chrony.drift#' /etc/chrony/chrony.conf
 
 # config symlinks
 ln -sf /boot/adsbx-978env /etc/default/dump978-fa
