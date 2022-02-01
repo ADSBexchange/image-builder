@@ -40,7 +40,7 @@ touch /boot/adsb-config.txt # canary used in some scripting if it's the adsbexch
 mv /etc/cron.hourly/fake-hwclock /etc/cron.daily || true
 
 pushd /etc/cron.daily
-rm apt-compat bsdmainutils dpkg man-db
+rm -f apt-compat bsdmainutils dpkg man-db
 popd
 
 
