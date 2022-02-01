@@ -35,6 +35,7 @@ EOF
 fi
 
 echo adsbexchange > /etc/hostname
+touch /boot/adsb-config.txt # canary used in some scripting if it's the adsbexchange image
 
 mv /etc/cron.hourly/fake-hwclock /etc/cron.daily || true
 
