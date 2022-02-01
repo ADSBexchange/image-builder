@@ -1,0 +1,2 @@
+# weekly reboot on Monday at 04:42 AM
+42 4 * * 1 root /usr/sbin/reboot
