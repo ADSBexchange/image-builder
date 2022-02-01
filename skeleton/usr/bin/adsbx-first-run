@@ -21,6 +21,7 @@ function services-handle() {
         fi
     done
 }
+bash /usr/local/bin/adsbx-create-uuid.sh
 if [ -f "/boot/adsb-config.txt" ]; then
 
     # remove spaces from non-comment lines:
@@ -57,6 +58,5 @@ if [ -f "/boot/adsb-config.txt" ]; then
             services-handle disable "$SERVICES_PROMG"
         fi
     fi
-
 fi
 
