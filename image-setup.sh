@@ -3,6 +3,8 @@
 set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 
+export DEBIAN_FRONTEND=noninteractive
+
 rm -rf /utemp
 mkdir -p /utemp
 cd /utemp
