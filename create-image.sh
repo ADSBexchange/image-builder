@@ -3,6 +3,11 @@
 set -e
 trap 'echo "[ERROR] Error in line $LINENO when executing: $BASH_COMMAND"' ERR
 
+if [ "$(id -u)" != "0" ]; then
+    echo "This script must be run using sudo or as root (only root can do the loop setup and mounting of the image)" 1>&2
+    exit 1
+fi
+
 if [[ -z $1 ]] || [[ -z $2 ]]; then
     echo "usage: ./create-image <template-image> <image>"
     exit 1
