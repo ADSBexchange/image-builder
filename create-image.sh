@@ -14,13 +14,15 @@ if [[ -z $1 ]] || [[ -z $2 ]]; then
 fi
 image="$2"
 
+mkdir -p ./root
+chown root:root ./root
+
 if true; then
     rm -f "${image}"
     cp -f "$1" "${image}"
     ./growimage.sh "${image}" 2500M
     ./mount.sh "${image}"
 fi
-
 
 find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -T --remove-destination -v skeleton/'{}' root/'{}'
