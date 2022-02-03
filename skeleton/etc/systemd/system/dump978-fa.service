@@ -1,8 +1,8 @@
-# readsb service for systemd
+# dump978-fa service for systemd
 
 [Unit]
-Description=readsb ADS-B receiver
-Documentation=https://github.com/mictronics/readsb
+Description=dump978 ADS-B UAT receiver
+Documentation=https://flightaware.com/adsb/piaware/
 Wants=network.target
 After=network.target
 After=adsbexchange-first-run.service
@@ -10,10 +10,9 @@ After=adsbexchange-first-run.service
 [Service]
 EnvironmentFile=/boot/adsb-config.txt
 EnvironmentFile=/boot/adsbx-env
-User=readsb
-RuntimeDirectory=readsb
-RuntimeDirectoryMode=0755
-ExecStart=/usr/local/bin/readsb.sh
+User=dump978
+ExecStart=/usr/share/dump978-fa/start-dump978-fa
+SyslogIdentifier=dump978-fa
 Type=simple
 Restart=always
 RestartSec=15
@@ -23,3 +22,4 @@ Nice=-5
 
 [Install]
 WantedBy=default.target
+
