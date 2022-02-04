@@ -26,6 +26,7 @@ systemctl disable apt-daily-upgrade.timer
 systemctl disable man-db.timer
 
 if ! grep -qs -e '/tmp' /etc/fstab; then
+     sed -i -E -e 's/(vfat *defaults) /\1,noatime/g' /etc/fstab
 cat >> /etc/fstab <<EOF
 tmpfs /tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
 tmpfs /var/tmp tmpfs defaults,noatime,nosuid,size=100M	0	0
