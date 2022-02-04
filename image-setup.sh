@@ -78,7 +78,7 @@ packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr so
 packages+=" curl uuid-runtime jq gzip dnsutils perl bash-builtins" # for adsbexchange-stats, avoid invoking apt install gain
 
 # these are less than 0.5 MB each, useful tools for various stuff
-packages+=" moreutils inotify-tools cpufreq-utils"
+packages+=" moreutils inotify-tools cpufrequtils"
 
 apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
 
