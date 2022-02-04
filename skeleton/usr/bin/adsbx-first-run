@@ -25,7 +25,7 @@ bash /usr/local/bin/adsbx-create-uuid.sh
 if [ -f "/boot/adsb-config.txt" ]; then
 
     # remove spaces from non-comment lines:
-    sed -i -e '/^#/!s/ //g' /boot/adsb-config.txt > /run/adsb-config.txt
+    sed -e '/^#/!s/ //g' /boot/adsb-config.txt > /run/adsb-config.txt
     # cater to idiots
     sed -i -e 's/NO/no/g' -e 's/YES/yes/g' /run/adsb-config.txt
     # only do a write if necessary
