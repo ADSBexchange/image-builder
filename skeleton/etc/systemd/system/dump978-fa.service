@@ -9,9 +9,9 @@ After=adsbexchange-first-run.service
 
 [Service]
 EnvironmentFile=/boot/adsb-config.txt
-EnvironmentFile=/boot/adsbx-env
+EnvironmentFile=/boot/adsbx-978env
 User=dump978
-ExecStart=/usr/share/dump978-fa/start-dump978-fa
+ExecStart=/usr/bin/dump978-fa $RECEIVER_OPTIONS $DECODER_OPTIONS $NET_OPTIONS
 SyslogIdentifier=dump978-fa
 Type=simple
 Restart=always
@@ -22,4 +22,3 @@ Nice=-5
 
 [Install]
 WantedBy=default.target
-

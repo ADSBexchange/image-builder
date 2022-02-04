@@ -77,6 +77,9 @@ temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses5-dev zlib1
 packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime rtl-sdr beast-splitter"
 packages+=" curl uuid-runtime jq gzip dnsutils perl bash-builtins" # for adsbexchange-stats, avoid invoking apt install gain
 
+# these are less than 0.5 MB each, useful for tracking down writes:
+packages+=" moreutils inotify-tools"
+
 apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
 
 apt purge -y piaware-repository
