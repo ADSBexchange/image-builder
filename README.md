@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/ADSBexchange/image-builder.git
 cd image-builder
-wget -O https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip
+wget https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02/2021-12-02-raspios-buster-armhf-lite.zip
 unzip 2021-12-02-raspios-buster-armhf-lite.zip
  ./create-image.sh 2021-12-02-raspios-buster-armhf-lite.img buster.img
 ```
