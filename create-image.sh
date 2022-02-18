@@ -12,7 +12,7 @@ if [[ -z $1 ]] || [[ -z $2 ]]; then
     echo "usage: ./create-image <template-image> <image>"
     exit 1
 fi
-image="$2"
+[[ $2 =~ ^[0-9]*[0-9]\.[0-9]$ ]] && image="adsbx-$2.$(date +%y%m%d -d now).img" || image="$2"
 
 mkdir -p ./root
 chown root:root ./root
@@ -23,6 +23,8 @@ if true; then
     ./growimage.sh "${image}" 2500M
     ./mount.sh "${image}"
 fi
+
+echo $2.$(date +%y%m%d -d now) > root/boot/adsbx-version
 
 find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
 find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -T --remove-destination -v skeleton/'{}' root/'{}'
