@@ -105,7 +105,8 @@ ln -snf /run/readsb /usr/share/graphs1090/data-symlink/data
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/autogain-install.sh)"
 
-apt remove -y $temp_packages
+# rsyslog / logrotate doesn't have any easy maxsize settings .... those tools can go where the sun doesn't shine
+apt remove -y $temp_packages rsyslog
 apt autoremove -y
 apt clean
 
