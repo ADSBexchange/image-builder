@@ -22,6 +22,7 @@ function services-handle() {
     done
 }
 bash /usr/local/bin/adsbx-create-uuid.sh
+bash /usr/local/bin/fix-config.sh
 if [ -f "/boot/adsb-config.txt" ]; then
 
     # remove spaces from non-comment lines:

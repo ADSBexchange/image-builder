@@ -9,7 +9,7 @@ else
     exit 1
 fi
 
-/usr/bin/adsbx-978 \
+exec /usr/bin/adsbx-978 \
     $RECEIVER_978_OPTIONS $DECODER_978_OPTIONS $NET_978_OPTIONS $JSON_978_OPTIONS \
     --lat ${LATITUDE} --lon ${LONGITUDE} \
     --net-ri-port $AVR_978_IN_PORT \
