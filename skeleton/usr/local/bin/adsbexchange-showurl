@@ -1,2 +1,0 @@
-#!/bin/bash
-sed -e 's$^$https://www.adsbexchange.com/api/feeders/?feed=$' /boot/adsbx-uuid

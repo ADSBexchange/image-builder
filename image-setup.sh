@@ -45,15 +45,8 @@ rm -f apt-compat bsdmainutils dpkg man-db
 popd
 
 
-# enable services
-systemctl enable \
-    adsbexchange-first-run.service \
-    adsbx-zt-enable.service \
-    readsb.service \
-    adsbexchange-mlat.service \
-    adsbexchange-feed.service \
-    ssh
-
+# enable ssh
+systemctl enable ssh
 
 if grep -qs -e bullseye /etc/os-release; then
     wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_7.1_all.deb

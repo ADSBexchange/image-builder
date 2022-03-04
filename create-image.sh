@@ -36,9 +36,6 @@ fi
 
 echo "$version" > root/boot/adsbx-version
 
-find skeleton -type d | cut -d / -f1 --complement | grep -v '^skeleton' | xargs -t -I '{}' -s 2048 mkdir -p root/'{}'
-find skeleton -type f | cut -d / -f1 --complement | xargs -I '{}' -s 2048 cp -T --remove-destination -v skeleton/'{}' root/'{}'
-
 mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
