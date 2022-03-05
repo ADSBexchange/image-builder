@@ -16,10 +16,6 @@ echo "pi:adsb123" | chpasswd
 # this isn't really necessary but it doesn't hurt
 echo -e 'blacklist rtl2832\nblacklist dvb_usb_rtl28xxu\nblacklist rtl8192cu\nblacklist rtl8xxxu\n' > /etc/modprobe.d/blacklist-rtl-sdr.conf
 
-# mask services we don't need on this image
-systemctl mask dump1090-fa
-systemctl mask dump1090
-systemctl mask dump1090-mutability
 systemctl disable dphys-swapfile.service
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
