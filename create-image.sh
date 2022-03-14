@@ -20,7 +20,11 @@ else
     if [[ -n $3 ]] && [[ $3 =~ ^[0-9]*[0-9]\.[0-9]$ ]]; then
         version="$3.$(date +%y%m%d -d now)"
     else
-        version="8.1.$(date +%y%m%d -d now)"
+        if grep bullseye <<< "$1"; then
+            version="8.2.$(date +%y%m%d -d now)"
+        else
+            version="8.1.$(date +%y%m%d -d now)"
+        fi
     fi
 fi
 
