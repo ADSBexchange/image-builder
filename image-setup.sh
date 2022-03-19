@@ -70,7 +70,15 @@ packages+=" curl uuid-runtime jq gzip dnsutils perl bash-builtins" # for adsbexc
 # these are less than 0.5 MB each, useful tools for various stuff
 packages+=" moreutils inotify-tools cpufrequtils"
 
-apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
+while ! apt install --no-install-recommends --no-install-suggests -y $packages $temp_packages
+do
+    echo --------------
+    echo --------------
+    echo apt install failed, lets TRY AGAIN in 10 seconds!
+    echo --------------
+    echo --------------
+    sleep 10
+done
 
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
