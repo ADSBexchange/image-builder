@@ -9,6 +9,13 @@ rm -rf /utemp
 mkdir -p /utemp
 cd /utemp
 
+
+if ! id -u pi; then
+    # create pi user
+    adduser pi
+    adduser pi sudo
+    echo "pi ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/010_pi-nopasswd
+fi
 # set password for pi user
 echo "pi:adsb123" | chpasswd
 
@@ -61,8 +68,7 @@ systemctl disable zerotier-one
 
 apt update
 apt remove -y g++ libraspberrypi-doc gdb
-# disable kernel update for the time being
-#apt dist-upgrade -y
+apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses5-dev zlib1g-dev python3-dev python3-venv"
 packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime rtl-sdr beast-splitter"
