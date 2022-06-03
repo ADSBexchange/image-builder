@@ -12,9 +12,10 @@ unzip 2021-12-02-raspios-buster-armhf-lite.zip
 
 ## Building the adsbexchange image base on bullseye
 
-Should work similar as above, not yet tested
 ```
-https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-01-28/2022-01-28-raspios-bullseye-armhf-lite.zip
+wget https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/2022-04-04-raspios-bullseye-armhf-lite.img.xz
+unxz 2022-04-04-raspios-bullseye-armhf-lite.img.xz
+./create-image.sh 2022-04-04-raspios-bullseye-armhf-lite.img bullseye.img
 ```
 
 ## tracking down disk writes
