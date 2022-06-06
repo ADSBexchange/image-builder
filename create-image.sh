@@ -81,7 +81,7 @@ if [ "$TARGET_END" -gt "$MAX_TARGET_END" ]; then TARGET_END=$MAX_TARGET_END; fi\
 ./pishrink-custom.sh -sv "${image}"
 
 ./mount.sh "${image}"
-dd if=/dev/zero of=root/zeros bs=1M status=progress || true
+dd if=/dev/zero of=root/zeros bs=1M status=progress &>/dev/null || true
 rm -rf root/zeros
 ./umount.sh "${image}"
 
