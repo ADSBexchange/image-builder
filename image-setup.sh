@@ -71,8 +71,8 @@ apt remove -y g++ libraspberrypi-doc gdb
 apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses-dev zlib1g-dev python3-dev python3-venv"
-packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat uuid-runtime rtl-sdr beast-splitter"
-packages+=" curl uuid-runtime jq gzip dnsutils perl bash-builtins" # for adsbexchange-stats, avoid invoking apt install gain
+packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat rtl-sdr beast-splitter"
+packages+=" curl jq gzip dnsutils perl bash-builtins" # for adsbexchange-stats, avoid invoking apt install gain
 
 # these are less than 0.5 MB each, useful tools for various stuff
 packages+=" moreutils inotify-tools cpufrequtils"
