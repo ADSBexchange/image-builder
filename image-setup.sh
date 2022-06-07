@@ -9,6 +9,11 @@ rm -rf /utemp
 mkdir -p /utemp
 cd /utemp
 
+# set timezone to UTC
+echo UTC > /etc/timezone
+ls -l /etc/localtime
+ln -s -f /usr/share/zoneinfo/UTC /etc/localtime
+ls -l /etc/localtime
 
 if ! id -u pi; then
     # create pi user
