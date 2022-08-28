@@ -11,9 +11,11 @@ cd /utemp
 
 # set timezone to UTC
 echo UTC > /etc/timezone
-ls -l /etc/localtime
 ln -s -f /usr/share/zoneinfo/UTC /etc/localtime
-ls -l /etc/localtime
+
+# fix up timezone .... not sure if there even was an issue
+# anyhow this is the debian way, timedatectl and manually doing the above apparently aren't good enough for some weird debian aspects
+dpkg-reconfigure --frontend noninteractive tzdata
 
 source /etc/os-release
 if (( $VERSION_ID < 11 )); then
