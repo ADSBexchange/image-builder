@@ -111,6 +111,19 @@ rm -rf /adsbexchange/update
 git clone --depth 1 https://github.com/ADSBexchange/adsbx-update.git /adsbexchange/update
 rm -rf /adsbexchange/update/.git
 
+## In case of a new install and config files not present, add them.
+pushd /adsbexchange/update/boot-configs &>/dev/null
+for file in *; do
+    if [ ! -e "/boot/$file" ]; then  # Check if the file does not exist in /boot
+        echo -e "\n RESET /boot/$file"
+        cp --remove-destination -f -T "$file" "/boot/$file"
+    else
+        echo -e "\n SKIP /boot/$file - already exists"
+    fi
+done
+popd &>/dev/null
+
+
 bash /adsbexchange/update/update-adsbx.sh
 
 git clone --depth 1 https://github.com/ADSBexchange/adsbx-webconfig.git
