@@ -113,7 +113,7 @@ rm -rf /adsbexchange/update/.git
 
 bash /adsbexchange/update/update-adsbx.sh
 
-git clone --depth 1 https://github.com/dstreufert/adsbx-webconfig.git
+git clone --depth 1 https://github.com/ADSBexchange/adsbx-webconfig.git
 pushd adsbx-webconfig
 bash install.sh
 popd
