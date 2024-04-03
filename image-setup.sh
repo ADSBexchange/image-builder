@@ -89,6 +89,7 @@ apt dist-upgrade -y
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses-dev zlib1g-dev python3-dev python3-venv libzstd-dev"
 packages="chrony librtlsdr0 lighttpd zlib1g dump978-fa soapysdr-module-rtlsdr socat netcat-openbsd rtl-sdr beast-splitter libzstd1 userconf-pi libncurses6"
 packages+=" curl jq gzip dnsutils perl bash-builtins" # for adsbexchange-stats, avoid invoking apt install gain
+packages+=" gpsd gpsd-clients" # for adsbexchange-gpsmon
 
 # these are less than 0.5 MB each, useful tools for various stuff
 packages+=" moreutils inotify-tools cpufrequtils"
@@ -102,6 +103,9 @@ do
     echo --------------
     sleep 10
 done
+
+# No idea why this gets marked for autoremoval, but let's prevent that.
+apt-mark manual gpsd-clients gpsd
 
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
