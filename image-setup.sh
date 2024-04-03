@@ -104,9 +104,6 @@ do
     sleep 10
 done
 
-# No idea why this gets marked for autoremoval, but let's prevent that.
-apt-mark manual gpsd-clients gpsd
-
 apt purge -y piaware-repository
 rm -f /etc/apt/sources.list.d/piaware-*.list
 
@@ -144,6 +141,9 @@ bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/aut
 
 # rsyslog / logrotate doesn't have any easy maxsize settings .... those tools can go where the sun doesn't shine
 apt remove -y $temp_packages rsyslog
+# No idea why this gets marked for autoremoval, but let's prevent that.
+apt-mark manual gpsd-clients gpsd
+
 apt autoremove -y
 apt clean
 
