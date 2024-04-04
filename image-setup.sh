@@ -139,11 +139,10 @@ ln -snf /run/readsb /usr/share/graphs1090/data-symlink/data
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/adsb-scripts/raw/master/autogain-install.sh)"
 
-# gpsd-clients Keeps getting removed
-apt-mark hold gpsd-clients
 # rsyslog / logrotate doesn't have any easy maxsize settings .... those tools can go where the sun doesn't shine
 apt remove -y $temp_packages rsyslog
-apt autoremove -y
+# gpsd-clients Keeps getting removed, so commenting out line below until we figure out why
+# apt autoremove -y
 apt clean
 apt-mark manual gpsd-clients gpsd
 
