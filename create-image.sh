@@ -52,6 +52,7 @@ env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
 rm -f root/boot/adsbx-uuid
 rm -rf root/var/lib/zerotier-one/identity.*
 rm -rf root/var/lib/zerotier-one/authtoken.secret
+rm -rf root/var/lib/tailscale/tailscaled.state
 rm -rf root/var/lib/collectd/rrd/*
 rm -rf root/etc/ssh/ssh_host_*_key*
 rm -rf root/home/pi/.bash_history
