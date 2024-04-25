@@ -76,11 +76,14 @@ else
 fi
 dpkg -i piaware-repo.deb
 
-curl https://install.zerotier.com  -o install-zerotier.sh
-sed -i -e 's#while \[ ! -f /var/lib/zerotier-one/identity.secret \]; do#\0 break#' install-zerotier.sh
-bash install-zerotier.sh
+# curl https://install.zerotier.com  -o install-zerotier.sh
+# sed -i -e 's#while \[ ! -f /var/lib/zerotier-one/identity.secret \]; do#\0 break#' install-zerotier.sh
+# bash install-zerotier.sh
 
-systemctl disable zerotier-one
+# systemctl disable zerotier-one
+
+curl -fsSL https://tailscale.com/install.sh | sh
+
 
 apt update
 apt remove -y g++ libraspberrypi-doc gdb
