@@ -21,7 +21,12 @@ losetup $loop -P $image
 
 mkdir -p root
 mount $p2 root
-mount $p1 root/boot
+# bookworm mounts the boot partition at /boot/firmware
+if grep -qs bookworm root/etc/os-release; then
+    mount $p1 root/boot/firmware
+else
+    mount $p1 root/boot
+fi
 
 mount --bind /dev root/dev
 mount --bind /dev/pts root/dev/pts

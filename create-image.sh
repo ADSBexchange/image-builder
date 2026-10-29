@@ -38,6 +38,11 @@ if true; then
     ./mount.sh "${image}"
 fi
 
+bootfs=root/boot
+if grep -qs bookworm root/etc/os-release; then
+    bootfs=root/boot/firmware
+fi
+
 echo "$version" > root/boot/adsbx-version
 
 mkdir -p root/adsbexchange/image-setup
@@ -68,7 +73,7 @@ rm -rf root/usr/share/graphs1090/git/
 
 # modify rpi image autoexpand
 cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
-sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' root/boot/cmdline.txt
+sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' "$bootfs/cmdline.txt"
 sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
 sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
 sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\

@@ -9,7 +9,9 @@ fi
 loop=$(cat ./useloop)
 
 umount root/dev/pts || true
-umount root/dev root/proc root/boot || true
+umount root/dev root/proc || true
+umount root/boot/firmware || true
+umount root/boot || true
 
 if ! umount root && ! umount root 2>&1 | grep -qs -e 'not mounted'; then
     exit 1

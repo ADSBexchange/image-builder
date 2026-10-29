@@ -30,7 +30,11 @@ if (( $VERSION_ID < 11 )); then
     echo "pi:adsb123" | chpasswd
 else
     # use this idiotic way to create pi user, thank you raspbian to making the above way not work
-    echo -n 'pi:' > /boot/userconf.txt && echo 'adsb123' | openssl passwd -6 -stdin >> /boot/userconf.txt
+    userconf=/boot/userconf.txt
+    if [[ -d /boot/firmware ]]; then
+        userconf=/boot/firmware/userconf.txt
+    fi
+    echo -n 'pi:' > "$userconf" && echo 'adsb123' | openssl passwd -6 -stdin >> "$userconf"
 fi
 
 # for good measure, blacklist SDRs ... we don't need these kernel modules
@@ -70,7 +74,7 @@ if grep -qs -e bullseye /etc/os-release; then
 elif grep -qs -e buster /etc/os-release; then
     wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.1_all.deb
 elif grep -qs -e bookworm /etc/os-release; then
-    wget -O piaware-repo.deb https://www.flightaware.com/adsb/piaware/files/packages/pool/piaware/f/flightaware-apt-repository/flightaware-apt-repository_1.2_all.deb
+    wget -O piaware-repo.deb https://www.flightaware.com/adsb/piaware/files/packages/pool/piaware/f/flightaware-apt-repository/flightaware-apt-repository_1.3_all.deb
 else
     wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.1_all.deb
 fi
