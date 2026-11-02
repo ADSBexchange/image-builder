@@ -48,7 +48,16 @@ echo "$version" > root/boot/adsbx-version
 mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
+# the chroot needs name resolution; the image keeps its own resolv.conf afterwards
+if [[ -e root/etc/resolv.conf || -L root/etc/resolv.conf ]]; then
+    mv -f root/etc/resolv.conf root/etc/resolv.conf.image
+fi
+cp -L /etc/resolv.conf root/etc/resolv.conf
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
+rm -f root/etc/resolv.conf
+if [[ -e root/etc/resolv.conf.image || -L root/etc/resolv.conf.image ]]; then
+    mv -f root/etc/resolv.conf.image root/etc/resolv.conf
+fi
 
 # don't delete these file, we need wpa conf from webconfig which has already set this file
 #rm -rf root/boot/wpa_supplicant.conf
