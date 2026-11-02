@@ -80,15 +80,19 @@ rm -rf root/var/cache/apt
 rm -rf root/var/lib/apt/lists/*
 rm -rf root/usr/share/graphs1090/git/
 
-# modify rpi image autoexpand
-cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
-sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' "$bootfs/cmdline.txt"
-sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
-sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
-sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\
+# limit the first-boot root expansion to 8000 MiB on images that expand through init_resize.sh
+if grep -qs init_resize.sh "$bootfs/cmdline.txt"; then
+    cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
+    sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' "$bootfs/cmdline.txt"
+    sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
+    sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
+    sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\
 MAX_TARGET_END=$((8000 * 1024 * 1024 / 512))\
 if [ "$TARGET_END" -gt "$MAX_TARGET_END" ]; then TARGET_END=$MAX_TARGET_END; fi\
 #g' root/usr/local/bin/limited_expand.sh
+else
+    echo "cmdline.txt does not run init_resize.sh; the root partition is left as the base image's first boot leaves it"
+fi
 
 ./umount.sh
 
