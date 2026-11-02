@@ -31,15 +31,25 @@ fi
 mkdir -p ./root
 chown root:root ./root
 
-if true; then
-    rm -f "${image}"
-    cp -f "$1" "${image}"
-    ./growimage.sh "${image}" 4000M
-    ./mount.sh "${image}"
+rm -f "${image}"
+cp -f "$1" "${image}"
+
+# bookworm images have no first-boot root expansion, so the image is built at its final size
+# and not shrunk; older images expand on first boot (limited below) and are shrunk at the end
+bookworm=no
+if ./mount.sh "${image}" && grep -qs bookworm root/etc/os-release; then
+    bookworm=yes
 fi
+./umount.sh
+if [[ $bookworm == yes ]]; then
+    ./growimage.sh "${image}" 8000M
+else
+    ./growimage.sh "${image}" 2500M
+fi
+./mount.sh "${image}"
 
 bootfs=root/boot
-if grep -qs bookworm root/etc/os-release; then
+if [[ $bookworm == yes ]]; then
     bootfs=root/boot/firmware
 fi
 
@@ -97,7 +107,9 @@ fi
 ./umount.sh
 
 # skip auto expansion, we use the autoexpand the rpi image comes with and modify it
-./pishrink-custom.sh -sv "${image}"
+if [[ $bookworm != yes ]]; then
+    ./pishrink-custom.sh -sv "${image}"
+fi
 
 ./mount.sh "${image}"
 dd if=/dev/zero of=root/zeros bs=1M status=progress &>/dev/null || true
