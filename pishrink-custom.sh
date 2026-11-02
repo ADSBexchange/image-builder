@@ -358,9 +358,9 @@ else
   echo "Skipping autoexpanding process..."
 fi
 
-e2fsck -f "$loopback"
+e2fsck -fp "$loopback" || [ $? -le 1 ]
 resize2fs -p -M "$loopback"
-e2fsck -f "$loopback"
+e2fsck -fp "$loopback" || [ $? -le 1 ]
 
 if ! minsize=$(resize2fs -P "$loopback"); then
 	rc=$?
@@ -385,9 +385,9 @@ logVariables $LINENO minsize
 
 #Shrink filesystem
 info "Shrinking filesystem"
-e2fsck -f "$loopback"
+e2fsck -fp "$loopback" || [ $? -le 1 ]
 resize2fs -p "$loopback" $minsize
-e2fsck -f "$loopback"
+e2fsck -fp "$loopback" || [ $? -le 1 ]
 rc=$?
 if (( $rc )); then
   error $LINENO "resize2fs failed with rc $rc"

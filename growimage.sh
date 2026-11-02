@@ -41,7 +41,7 @@ p2=${loop}p2
 losetup $loop -P $image
 
 
-e2fsck -f $p2
+e2fsck -fp "$p2" || [ $? -le 1 ]
 resize2fs $p2
 
 ./umount.sh
