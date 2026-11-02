@@ -35,14 +35,15 @@ rm -f "${image}"
 cp -f "$1" "${image}"
 
 # bookworm images have no first-boot root expansion, so the image is built at its final size
-# and not shrunk; older images expand on first boot (limited below) and are shrunk at the end
+# (7580M, the usable size of an 8 GB card) and not shrunk; older images expand on first boot
+# (limited below) and are shrunk at the end
 bookworm=no
 if ./mount.sh "${image}" && grep -qs bookworm root/etc/os-release; then
     bookworm=yes
 fi
 ./umount.sh
 if [[ $bookworm == yes ]]; then
-    ./growimage.sh "${image}" 8000M
+    ./growimage.sh "${image}" 7580M
 else
     ./growimage.sh "${image}" 2500M
 fi
