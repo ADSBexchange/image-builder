@@ -138,6 +138,10 @@ git clone --depth 1 https://github.com/ADSBexchange/adsbx-webconfig.git
 pushd adsbx-webconfig
 bash install.sh
 popd
+# new images ship with automatic Debian security updates on (the switch is on the update page)
+if [[ -x /adsbexchange/webconfig/helpers/auto-updates.sh ]]; then
+    bash /adsbexchange/webconfig/helpers/auto-updates.sh enable
+fi
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
 #make sure the symlinks are present for graphs1090 data collection:
