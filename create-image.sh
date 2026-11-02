@@ -34,7 +34,7 @@ chown root:root ./root
 if true; then
     rm -f "${image}"
     cp -f "$1" "${image}"
-    ./growimage.sh "${image}" 2500M
+    ./growimage.sh "${image}" 4000M
     ./mount.sh "${image}"
 fi
 
