@@ -42,6 +42,9 @@ fi
 echo -e 'blacklist rtl2832\nblacklist dvb_usb_rtl28xxu\nblacklist rtl8192cu\nblacklist rtl8xxxu\n' > /etc/modprobe.d/blacklist-rtl-sdr.conf
 
 systemctl disable dphys-swapfile.service
+# 100 MB swap file for the feeder software builds on low-memory boards; the service stays off
+sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+dphys-swapfile setup
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
 systemctl disable man-db.timer
@@ -90,7 +93,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 
 
 apt update
-apt remove -y g++ libraspberrypi-doc gdb
+apt remove -y --autoremove g++ libraspberrypi-doc gdb
 apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses-dev zlib1g-dev python3-dev python3-venv libzstd-dev"
