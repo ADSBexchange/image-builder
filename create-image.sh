@@ -83,7 +83,6 @@ rm -rf root/etc/ssh/ssh_host_*_key*
 rm -rf root/home/pi/.bash_history
 rm -rf root/home/pi/.local
 rm -rf root/root/.bash_history
-rm -rf root/usr/local/share/tar1090/git
 rm -rf root/usr/local/share/tar1090/git-db
 rm -rf root/tmp/*
 rm -rf root/var/tmp/*
