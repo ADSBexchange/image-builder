@@ -45,6 +45,10 @@ systemctl disable dphys-swapfile.service
 # 100 MB swap file for the feeder software builds on low-memory boards; the service stays off
 sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
 dphys-swapfile setup
+# the base image keeps the Wi-Fi radio off until a country is set; the setup network needs it on
+# and runs on the 2.4 GHz channels the world regulatory domain allows
+printf '[main]\nNetworkingEnabled=true\nWirelessEnabled=true\nWWANEnabled=true\n' > /var/lib/NetworkManager/NetworkManager.state
+rm -f /var/lib/systemd/rfkill/*:wlan
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
 systemctl disable man-db.timer
