@@ -18,30 +18,19 @@ PART_NUM=2
 
 ./umount.sh
 
-truncate -s "$2" "$image"
-
-PART_START=$(parted $image -ms unit s p | grep "^${PART_NUM}" | cut -f 2 -d: | sed 's/[^0-9]//g')
-
-fdisk "$image" <<EOF
-  p
-  d
-  $PART_NUM
-  n
-  p
-  $PART_NUM
-  $PART_START
-
-  p
-  w
-EOF
-
+# grow the file to $2 (never shrink it) and extend the root partition to the end
+target=$(numfmt --from=iec "$2")
+if (( $(stat -c %s "$image") < target )); then
+    truncate -s "$target" "$image"
+fi
+parted -s "$image" resizepart $PART_NUM 100%
 
 p1=${loop}p1
 p2=${loop}p2
 losetup $loop -P $image
 
 
-e2fsck -f $p2
+e2fsck -fp "$p2" || [ $? -le 1 ]
 resize2fs $p2
 
 ./umount.sh

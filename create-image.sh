@@ -31,11 +31,27 @@ fi
 mkdir -p ./root
 chown root:root ./root
 
-if true; then
-    rm -f "${image}"
-    cp -f "$1" "${image}"
+rm -f "${image}"
+cp -f "$1" "${image}"
+
+# bookworm images have no first-boot root expansion, so the image is built at its final size
+# (7580M, the usable size of an 8 GB card) and not shrunk; older images expand on first boot
+# (limited below) and are shrunk at the end
+bookworm=no
+if ./mount.sh "${image}" && grep -qs bookworm root/etc/os-release; then
+    bookworm=yes
+fi
+./umount.sh
+if [[ $bookworm == yes ]]; then
+    ./growimage.sh "${image}" 7580M
+else
     ./growimage.sh "${image}" 2500M
-    ./mount.sh "${image}"
+fi
+./mount.sh "${image}"
+
+bootfs=root/boot
+if [[ $bookworm == yes ]]; then
+    bootfs=root/boot/firmware
 fi
 
 echo "$version" > root/boot/adsbx-version
@@ -43,7 +59,16 @@ echo "$version" > root/boot/adsbx-version
 mkdir -p root/adsbexchange/image-setup
 init=/adsbexchange/image-setup/image-setup.sh
 cp -T -f image-setup.sh "./root/$init"
+# the chroot needs name resolution; the image keeps its own resolv.conf afterwards
+if [[ -e root/etc/resolv.conf || -L root/etc/resolv.conf ]]; then
+    mv -f root/etc/resolv.conf root/etc/resolv.conf.image
+fi
+cp -L /etc/resolv.conf root/etc/resolv.conf
 env -i /usr/sbin/chroot --userspec=root:root ./root /bin/bash -l "$init"
+rm -f root/etc/resolv.conf
+if [[ -e root/etc/resolv.conf.image || -L root/etc/resolv.conf.image ]]; then
+    mv -f root/etc/resolv.conf.image root/etc/resolv.conf
+fi
 
 # don't delete these file, we need wpa conf from webconfig which has already set this file
 #rm -rf root/boot/wpa_supplicant.conf
@@ -58,7 +83,6 @@ rm -rf root/etc/ssh/ssh_host_*_key*
 rm -rf root/home/pi/.bash_history
 rm -rf root/home/pi/.local
 rm -rf root/root/.bash_history
-rm -rf root/usr/local/share/tar1090/git
 rm -rf root/usr/local/share/tar1090/git-db
 rm -rf root/tmp/*
 rm -rf root/var/tmp/*
@@ -66,20 +90,28 @@ rm -rf root/var/cache/apt
 rm -rf root/var/lib/apt/lists/*
 rm -rf root/usr/share/graphs1090/git/
 
-# modify rpi image autoexpand
-cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
-sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' root/boot/cmdline.txt
-sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
-sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
-sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\
+# limit the first-boot root expansion to 8000 MiB on images that expand through init_resize.sh
+if grep -qs init_resize.sh "$bootfs/cmdline.txt"; then
+    cp root/usr/lib/raspi-config/init_resize.sh root/usr/local/bin/limited_expand.sh
+    sed -i -e 's|/usr/lib/raspi-config/init_resize.sh|/usr/local/bin/limited_expand.sh|' "$bootfs/cmdline.txt"
+    sed -i -e 's|/usr/lib/raspi-config/init_resize\\.sh|/usr/local/bin/limited_expand\\.sh|' root/usr/local/bin/limited_expand.sh
+    sed -i -e 's/sleep 5/sleep 1/g' root/usr/local/bin/limited_expand.sh
+    sed -i -e 's#TARGET_END=$((ROOT_DEV_SIZE - 1))#\0\
 MAX_TARGET_END=$((8000 * 1024 * 1024 / 512))\
 if [ "$TARGET_END" -gt "$MAX_TARGET_END" ]; then TARGET_END=$MAX_TARGET_END; fi\
 #g' root/usr/local/bin/limited_expand.sh
+else
+    echo "cmdline.txt does not run init_resize.sh; the root partition is left as the base image's first boot leaves it"
+fi
 
+# package scripts run during setup can activate the image's swap file on the build host
+swapoff root/var/swap 2>/dev/null || true
 ./umount.sh
 
 # skip auto expansion, we use the autoexpand the rpi image comes with and modify it
-./pishrink-custom.sh -sv "${image}"
+if [[ $bookworm != yes ]]; then
+    ./pishrink-custom.sh -sv "${image}"
+fi
 
 ./mount.sh "${image}"
 dd if=/dev/zero of=root/zeros bs=1M status=progress &>/dev/null || true

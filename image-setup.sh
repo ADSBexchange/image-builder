@@ -30,7 +30,11 @@ if (( $VERSION_ID < 11 )); then
     echo "pi:adsb123" | chpasswd
 else
     # use this idiotic way to create pi user, thank you raspbian to making the above way not work
-    echo -n 'pi:' > /boot/userconf.txt && echo 'adsb123' | openssl passwd -6 -stdin >> /boot/userconf.txt
+    userconf=/boot/userconf.txt
+    if [[ -d /boot/firmware ]]; then
+        userconf=/boot/firmware/userconf.txt
+    fi
+    echo -n 'pi:' > "$userconf" && echo 'adsb123' | openssl passwd -6 -stdin >> "$userconf"
 fi
 
 # for good measure, blacklist SDRs ... we don't need these kernel modules
@@ -38,6 +42,13 @@ fi
 echo -e 'blacklist rtl2832\nblacklist dvb_usb_rtl28xxu\nblacklist rtl8192cu\nblacklist rtl8xxxu\n' > /etc/modprobe.d/blacklist-rtl-sdr.conf
 
 systemctl disable dphys-swapfile.service
+# 100 MB swap file for the feeder software builds on low-memory boards; the service stays off
+sed -i 's/^CONF_SWAPSIZE=.*/CONF_SWAPSIZE=100/' /etc/dphys-swapfile
+dphys-swapfile setup
+# the base image keeps the Wi-Fi radio off until a country is set; the setup network needs it on
+# and runs on the 2.4 GHz channels the world regulatory domain allows
+printf '[main]\nNetworkingEnabled=true\nWirelessEnabled=true\nWWANEnabled=true\n' > /var/lib/NetworkManager/NetworkManager.state
+rm -f /var/lib/systemd/rfkill/*:wlan
 systemctl disable apt-daily.timer
 systemctl disable apt-daily-upgrade.timer
 systemctl disable man-db.timer
@@ -70,7 +81,7 @@ if grep -qs -e bullseye /etc/os-release; then
 elif grep -qs -e buster /etc/os-release; then
     wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_6.1_all.deb
 elif grep -qs -e bookworm /etc/os-release; then
-    wget -O piaware-repo.deb https://www.flightaware.com/adsb/piaware/files/packages/pool/piaware/f/flightaware-apt-repository/flightaware-apt-repository_1.2_all.deb
+    wget -O piaware-repo.deb https://www.flightaware.com/adsb/piaware/files/packages/pool/piaware/f/flightaware-apt-repository/flightaware-apt-repository_1.3_all.deb
 else
     wget -O piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.1_all.deb
 fi
@@ -86,7 +97,7 @@ curl -fsSL https://tailscale.com/install.sh | sh
 
 
 apt update
-apt remove -y g++ libraspberrypi-doc gdb
+apt remove -y --autoremove g++ libraspberrypi-doc gdb
 apt dist-upgrade -y
 
 temp_packages="git make gcc libusb-1.0-0-dev librtlsdr-dev libncurses-dev zlib1g-dev python3-dev python3-venv libzstd-dev"
@@ -134,6 +145,10 @@ git clone --depth 1 https://github.com/ADSBexchange/adsbx-webconfig.git
 pushd adsbx-webconfig
 bash install.sh
 popd
+# new images ship with automatic Debian security updates on (the switch is on the update page)
+if [[ -x /adsbexchange/webconfig/helpers/auto-updates.sh ]]; then
+    bash /adsbexchange/webconfig/helpers/auto-updates.sh enable
+fi
 
 bash -c "$(curl -L -o - https://github.com/wiedehopf/graphs1090/raw/master/install.sh)"
 #make sure the symlinks are present for graphs1090 data collection:
