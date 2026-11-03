@@ -104,6 +104,8 @@ else
     echo "cmdline.txt does not run init_resize.sh; the root partition is left as the base image's first boot leaves it"
 fi
 
+# package scripts run during setup can activate the image's swap file on the build host
+swapoff root/var/swap 2>/dev/null || true
 ./umount.sh
 
 # skip auto expansion, we use the autoexpand the rpi image comes with and modify it
